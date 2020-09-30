@@ -1,3 +1,10 @@
-.text-center {
+.my-less{
+    margin-top: -8px;
+    margin-bottom: -8px;
 }
-
+p.indent{
+    text-indent: 25px;
+}
+.text-black{
+    color:black;
+}
