@@ -1,0 +1,82 @@
+body{
+	line-height: 16px;
+	font-family: "Times New Roman", Times, serif;
+
+}
+h1 {
+  font-size: 17px;
+}
+a:hover {
+  text-decoration: underline;
+  }
+.selected-press-links-container .row{
+	height: 100vh;
+}
+@font-face { font-family: Eurostile LT W01 Demi1391154; src: url('/assets/fonts/Eurostile-LT-W01-Demi.woff'); } 
+.navbar {
+	font-family: "Eurostile LT W01 Demi1391154", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	color: #222222;
+	background-color: #;
+	letter-spacing: 4px;
+	line-height: 35px;
+	text-decoration: none;
+}
+
+.text-block{
+	font-family: "Times New Roman", Times, serif;
+	width: 400px;
+	flex-shrink: 0;
+}
+@media only screen and (max-width: 576px) {
+	.wrapper img, .wrapper iframe{
+		width: 100vw;
+		margin-bottom: 0.9rem;
+	}
+	.responsive-iframe {
+	  height: 56vw;
+	}
+	.text-block{
+		width: 100%;
+		padding-right: 16px;
+		padding-left: 16px;
+	}
+	.navbar{
+	font-size: 16px;
+	}
+	.wrapper{
+		margin-bottom: 2rem;
+	}
+}
+@media only screen and (min-width: 577px) {
+	.wrapper{
+		display: flex;
+		height: 84vh;
+	}
+	.wrapper img, .wrapper iframe{
+		height: 100%;
+		padding-right: 2rem;
+	}
+	.iframe-container {
+	}
+	.responsive-iframe {
+	  width: 153vh;
+	}
+	.text-block{
+	  width: 400px;
+	  padding-right: 32px;
+	}
+	.navbar{
+		font-size: 32px;
+		height:13vh;
+	}
+	.navbar .container-fluid{
+		margin-bottom: -45px;
+	}
+}
+@media only screen and (max-width: 350px){
+	  .navbar{
+	  font-size: 13px;
+	}
+}
