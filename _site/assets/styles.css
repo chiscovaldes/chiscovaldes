@@ -30,7 +30,7 @@ a:hover {
 	flex-shrink: 0;
 }
 @media only screen and (max-width: 576px) {
-	.wrapper img, .wrapper iframe{
+	.wrapper img, .wrapper iframe, .wrapper .wrapper-item {
 		width: 100vw;
 		margin-bottom: 0.9rem;
 	}
@@ -54,7 +54,7 @@ a:hover {
 		display: flex;
 		height: 84vh;
 	}
-	.wrapper img, .wrapper iframe{
+	.wrapper img, .wrapper iframe, .wrapper .wrapper-item {
 		height: 100%;
 		padding-right: 2rem;
 	}
