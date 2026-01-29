@@ -1,86 +1,131 @@
 body{
-	line-height: 16px;
-	font-family: "Times New Roman", Times, serif;
-
+  line-height: 16px;
+  font-family: "Times New Roman", Times, serif;
 }
+
 h1 {
   font-size: 17px;
 }
+
 a:hover {
   text-decoration: underline;
-  }
-.selected-press-links-container .row{
-	height: 100vh;
 }
-@font-face { font-family: Eurostile LT W01 Demi1391154; src: url('/assets/fonts/Eurostile-LT-W01-Demi.woff'); } 
+
+.selected-press-links-container .row{
+  height: 100vh;
+}
+
+@font-face {
+  font-family: Eurostile LT W01 Demi1391154;
+  src: url('/assets/fonts/Eurostile-LT-W01-Demi.woff');
+}
+
 .navbar {
-	font-family: "Eurostile LT W01 Demi1391154", Helvetica, Arial, sans-serif;
-	font-weight: normal;
-	font-style: normal;
-	color: #222222;
-	background-color: #;
-	letter-spacing: 4px;
-	line-height: 35px;
-	text-decoration: none;
+  font-family: "Eurostile LT W01 Demi1391154", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  color: #222222;
+  letter-spacing: 4px;
+  line-height: 35px;
+  text-decoration: none;
 }
 
 .text-block{
-	font-family: "Times New Roman", Times, serif;
-	width: 400px;
-	flex-shrink: 0;
+  font-family: "Times New Roman", Times, serif;
+  width: 400px;
+  flex-shrink: 0;
 }
+
+/* =========================
+   MOBILE
+   ========================= */
 @media only screen and (max-width: 576px) {
-	.wrapper img, .wrapper iframe, .wrapper .wrapper-item {
-		width: 100vw;
-		margin-bottom: 0.9rem;
-	}
-	.responsive-iframe {
-	  height: 56vw;
-	}
-	.text-block{
-		width: 100%;
-		padding-right: 16px;
-		padding-left: 16px;
-	}
-	.navbar{
-	font-size: 16px;
-	}
-	.wrapper{
-		margin-bottom: 2rem;
-	}
+
+  .wrapper img,
+  .wrapper iframe,
+  .wrapper .wrapper-item {
+    width: 100vw;
+    margin-bottom: 0.9rem;
+  }
+
+  /* Vimeo mobile: keep 16:9 */
+  .wrapper .iframe-container{
+    width: 100vw;
+    display: block;
+  }
+  .wrapper iframe.responsive-iframe{
+    width: 100vw;
+    height: 56vw;
+    display: block;
+  }
+
+  .text-block{
+    width: 100%;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .navbar{
+    font-size: 16px;
+  }
+
+  .wrapper{
+    margin-bottom: 2rem;
+  }
 }
+
+/* =========================
+   DESKTOP
+   ========================= */
 @media only screen and (min-width: 577px) {
-	.wrapper{
-		display: flex;
-		height: 84vh;
-	}
-	.wrapper img, .wrapper iframe, .wrapper .wrapper-item {
-		height: 100%;
-		padding-right: 2rem;
-	}
-	.iframe-container {
-	}
-	.responsive-iframe {
-	  width: 100%;
-	}
-	.text-block{
-	  width: 400px;
-	  padding-right: 32px;
-	}
-	.navbar{
-		font-size: 32px;
-		height:13vh;
-	}
-	.navbar .container-fluid{
-		margin-bottom: -45px;
-	}
+
+  .wrapper{
+    display: flex;
+    height: 84vh;
+  }
+
+  .wrapper img,
+  .wrapper iframe,
+  .wrapper .wrapper-item {
+    height: 100%;
+    padding-right: 2rem;
+  }
+
+  /* Vimeo desktop: match row height like images */
+  .wrapper .iframe-container{
+    height: 100%;
+    display: block;
+  }
+  .wrapper iframe.responsive-iframe{
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .text-block{
+    width: 400px;
+    padding-right: 32px;
+  }
+
+  .navbar{
+    font-size: 32px;
+    height: 13vh;
+  }
+
+  .navbar .container-fluid{
+    margin-bottom: -45px;
+  }
 }
+
 @media only screen and (max-width: 350px){
-	  .navbar{
-	  font-size: 13px;
-	}
+  .navbar{
+    font-size: 13px;
+  }
 }
-/* ABOUT: centered small portrait on white */
+
+/* =========================
+   ABOUT
+   ========================= */
 .about-photo-wrap{
   min-height: 100vh;
   display: flex;
@@ -96,7 +141,6 @@ a:hover {
   display: block;
 }
 
-/* Desktop tweaks */
 @media (min-width: 768px){
   .about-photo-wrap{
     padding: 60px 40px;
@@ -106,46 +150,24 @@ a:hover {
   }
 }
 
-/* ABOUT: center + lower the text column */
 .about-text{
   display: flex;
   flex-direction: column;
-  justify-content: center;   /* vertical center */
-  align-items: center;       /* horizontal center */
-  text-align: center;        /* center text */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   min-height: 100vh;
-  padding-top: 8vh;          /* pushes it lower */
-  padding-bottom: 10vh;      /* keeps space above navbar */
+  padding-top: 8vh;
+  padding-bottom: 10vh;
 }
 
-/* keep paragraphs readable even when centered */
 .about-text p{
   max-width: 42ch;
 }
 
-/* contact block: keep it centered but not too wide */
-.about-text h2, .about-text .title, .about-text a{
+.about-text h2,
+.about-text .title,
+.about-text a{
   width: 100%;
   max-width: 42ch;
 }
-
-/* FIX: make Vimeo embeds match image sizing */
-.wrapper .iframe-container{
-  height: 100%;
-  display: block;
-}
-
-.wrapper iframe.responsive-iframe{
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
-@media only screen and (min-width: 577px) {
-  .wrapper img:last-child,
-  .wrapper iframe:last-child,
-  .wrapper .wrapper-item:last-child {
-    padding-right: 0;
-  }
-}
-
