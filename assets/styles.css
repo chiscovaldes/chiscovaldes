@@ -80,3 +80,33 @@ a:hover {
 	  font-size: 13px;
 	}
 }
+/* ABOUT: centered small portrait on white */
+.about-photo-wrap{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 40px 20px;
+}
+
+.about-photo{
+  width: min(320px, 72vw);
+  height: auto;
+  display: block;
+}
+
+.about-text{
+  padding-bottom: 40px;
+}
+
+/* Desktop tweaks */
+@media (min-width: 768px){
+  .about-photo-wrap{
+    padding: 60px 40px;
+  }
+  .about-photo{
+    width: 320px;
+  }
+}
+
