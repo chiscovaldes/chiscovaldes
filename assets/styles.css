@@ -61,7 +61,7 @@ a:hover {
 	.iframe-container {
 	}
 	.responsive-iframe {
-	  width: 153vh;
+	  width: 100%;
 	}
 	.text-block{
 	  width: 400px;
@@ -96,10 +96,6 @@ a:hover {
   display: block;
 }
 
-.about-text{
-  padding-bottom: 40px;
-}
-
 /* Desktop tweaks */
 @media (min-width: 768px){
   .about-photo-wrap{
@@ -131,5 +127,25 @@ a:hover {
 .about-text h2, .about-text .title, .about-text a{
   width: 100%;
   max-width: 42ch;
+}
+
+/* FIX: make Vimeo embeds match image sizing */
+.wrapper .iframe-container{
+  height: 100%;
+  display: block;
+}
+
+.wrapper iframe.responsive-iframe{
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+@media only screen and (min-width: 577px) {
+  .wrapper img:last-child,
+  .wrapper iframe:last-child,
+  .wrapper .wrapper-item:last-child {
+    padding-right: 0;
+  }
 }
 
