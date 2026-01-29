@@ -110,3 +110,26 @@ a:hover {
   }
 }
 
+/* ABOUT: center + lower the text column */
+.about-text{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertical center */
+  align-items: center;       /* horizontal center */
+  text-align: center;        /* center text */
+  min-height: 100vh;
+  padding-top: 8vh;          /* pushes it lower */
+  padding-bottom: 10vh;      /* keeps space above navbar */
+}
+
+/* keep paragraphs readable even when centered */
+.about-text p{
+  max-width: 42ch;
+}
+
+/* contact block: keep it centered but not too wide */
+.about-text h2, .about-text .title, .about-text a{
+  width: 100%;
+  max-width: 42ch;
+}
+
