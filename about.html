@@ -3,6 +3,18 @@ layout: default
 title: ABOUT - EL PAPI
 ---
 
+<!-- ABOUT: top nav (only this page) -->
+<nav class="about-top-nav">
+  <a href="{{ '/' | relative_url }}">WORK</a>
+  <span class="dot">·</span>
+  <a href="{{ '/about' | relative_url }}" class="is-active">ABOUT</a>
+</nav>
+
+<!-- hide the default bottom nav only on ABOUT -->
+<style>
+  .navbar.fixed-bottom{ display:none !important; }
+</style>
+
 <div class="row about-row">
 
   <!-- LEFT: portrait -->
