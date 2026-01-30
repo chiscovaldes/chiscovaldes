@@ -5,15 +5,26 @@ title: ABOUT - EL PAPI
 
 <!-- ABOUT: top nav (only this page) -->
 <nav class="about-top-nav">
-  <a href="{{ '/' | relative_url }}">WORK</a>
-  <span class="dot">·</span>
-  <a href="{{ '/about' | relative_url }}" class="is-active">ABOUT</a>
+  <div class="about-top-left">← Madrid / Santander</div>
+
+  <div class="about-top-center">
+    <a href="{{ '/' | relative_url }}">WORK</a>
+    <span class="dot">·</span>
+    <a href="{{ '/about' | relative_url }}" class="is-active">ABOUT</a>
+  </div>
+
+  <div class="about-top-right">
+    <a href="https://instagram.com/chisco.papi" target="_blank" rel="noopener">Instagram</a>
+    <span class="sep">·</span>
+    <span>©2026</span>
+  </div>
 </nav>
 
 <!-- hide the default bottom nav only on ABOUT -->
 <style>
   .navbar.fixed-bottom{ display:none !important; }
 </style>
+
 
 <div class="row about-row">
 
@@ -57,13 +68,3 @@ title: ABOUT - EL PAPI
 
 </div>
 
-<!-- Footer OUTSIDE the row -->
-<footer class="about-footer">
-  <div class="about-footer-left">← Madrid / Santander</div>
-
-  <div class="about-footer-center">
-    <a href="https://instagram.com/chisco.papi" target="_blank" rel="noopener">Instagram</a>
-  </div>
-
-  <div class="about-footer-right">©2026</div>
-</footer>
