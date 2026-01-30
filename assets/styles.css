@@ -91,37 +91,19 @@ a:hover {
     padding-right: 2rem;
   }
 
-  /* Vimeo desktop: match row height like images */
+   /* Vimeo desktop: give the container a real width using aspect ratio */
   .wrapper .iframe-container{
     height: 100%;
-    display: block;
+    aspect-ratio: 16 / 9;
+    flex: 0 0 auto;
   }
+
   .wrapper iframe.responsive-iframe{
     width: 100%;
     height: 100%;
     display: block;
   }
-
-  .text-block{
-    width: 400px;
-    padding-right: 32px;
-  }
-
-  .navbar{
-    font-size: 32px;
-    height: 13vh;
-  }
-
-  .navbar .container-fluid{
-    margin-bottom: -45px;
-  }
-}
-
-@media only screen and (max-width: 350px){
-  .navbar{
-    font-size: 13px;
-  }
-}
+ }
 
 /* =========================
    ABOUT
