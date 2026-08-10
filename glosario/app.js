@@ -64,7 +64,7 @@
       </div>
       <div>
         <p class="term-definition">${highlight(item.definition, query)}</p>
-        <p class="term-note"><strong>En cristiano:</strong> ${highlight(item.note, query)}</p>
+        <p class="term-note"><strong>Para gente normal:</strong> ${highlight(item.note, query)}</p>
       </div>`;
     article.querySelector("button").addEventListener("click", () => {
       input.value = item.term;
