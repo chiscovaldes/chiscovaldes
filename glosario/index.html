@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Glosario claro, casual y útil de postproducción audiovisual.">
+  <title>POST//GLOSARIO</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Volver al inicio">NO TODO SE ARREGLA EN POST</a>
+    <span class="tool-number">HERRAMIENTA 03</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">ANTES DE ASENTIR EN LA REUNIÓN</p>
+      <h1 id="page-title">POST//<strong>GLOSARIO</strong></h1>
+      <p class="intro">Escribe ese término que alguien soltó como si todo el mundo supiera qué significaba.</p>
+
+      <form class="search-form" role="search">
+        <label class="sr-only" for="search">Buscar un término de postproducción</label>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input id="search" name="search" type="search" autocomplete="off" placeholder="Prueba: conform, LUT, DCP…">
+        <button class="clear-search" type="button" aria-label="Borrar búsqueda" hidden>×</button>
+      </form>
+
+      <div class="quick-actions" aria-label="Acciones rápidas">
+        <button class="text-button surprise" type="button">Sorpréndeme</button>
+        <button class="text-button show-all" type="button">Ver todos</button>
+      </div>
+    </section>
+
+    <nav class="categories" aria-label="Categorías del glosario"></nav>
+
+    <section class="results" aria-live="polite" aria-labelledby="results-title">
+      <div class="results-header">
+        <h2 id="results-title">Términos esenciales</h2>
+        <span class="result-count"></span>
+      </div>
+      <div class="result-list"></div>
+      <div class="empty-state" hidden>
+        <strong>No aparece.</strong>
+        <p>Puede que sea demasiado específico, esté escrito de otra forma o alguien se lo haya inventado con mucha seguridad.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Si una palabra cambia el alcance, el calendario o la entrega, no es jerga: es una pregunta pendiente.</p>
+    <span>POST//GLOSARIO · v1.0</span>
+  </footer>
+
+  <script src="glossary.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
