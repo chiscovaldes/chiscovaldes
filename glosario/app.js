@@ -1,6 +1,7 @@
 (function () {
   const terms = window.POST_GLOSSARY || [];
   const input = document.querySelector("#search");
+  const searchForm = document.querySelector(".search-form");
   const clearButton = document.querySelector(".clear-search");
   const list = document.querySelector(".result-list");
   const empty = document.querySelector(".empty-state");
@@ -48,10 +49,35 @@
     categories.appendChild(button);
   });
 
-  function matches(item, query) {
-    if (!query) return true;
-    const searchable = [item.term, item.category, item.definition, item.note, ...(item.aliases || [])].join(" ");
-    return normalize(searchable).includes(normalize(query));
+  const simpleRoot = (value) => {
+    const normalized = normalize(value);
+    if (normalized.length > 5 && normalized.endsWith("es")) return normalized.slice(0, -2);
+    if (normalized.length > 4 && normalized.endsWith("s")) return normalized.slice(0, -1);
+    return normalized;
+  };
+
+  function relevance(item, query) {
+    if (!query) return 1;
+
+    const normalizedQuery = normalize(query);
+    const queryRoot = simpleRoot(query);
+    const term = normalize(item.term);
+    const aliases = (item.aliases || []).map(normalize);
+    const directFields = [term, ...aliases];
+    const descriptiveText = normalize([item.category, item.definition, item.note].join(" "));
+    const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
+
+    if (term === normalizedQuery) return 100;
+    if (aliases.includes(normalizedQuery)) return 95;
+    if (simpleRoot(term) === queryRoot || aliases.some((alias) => simpleRoot(alias) === queryRoot)) return 90;
+    if (term.startsWith(normalizedQuery)) return 80;
+    if (aliases.some((alias) => alias.startsWith(normalizedQuery))) return 75;
+    if (term.includes(normalizedQuery)) return 70;
+    if (aliases.some((alias) => alias.includes(normalizedQuery))) return 65;
+    if (tokens.length > 1 && tokens.every((token) => directFields.some((field) => field.includes(token)))) return 60;
+    if (descriptiveText.includes(normalizedQuery)) return 30;
+    if (tokens.length > 1 && tokens.every((token) => descriptiveText.includes(token))) return 20;
+    return 0;
   }
 
   function createCard(item, query) {
@@ -80,8 +106,10 @@
     clearButton.hidden = !query;
     const filtered = terms
       .filter((item) => activeCategory === "Todo" || item.category === activeCategory)
-      .filter((item) => matches(item, query))
-      .sort((a, b) => a.term.localeCompare(b.term, "es"));
+      .map((item) => ({ item, score: relevance(item, query) }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score || a.item.term.localeCompare(b.item.term, "es"))
+      .map(({ item }) => item);
 
     const visible = query || showEverything || activeCategory !== "Todo" ? filtered : filtered.slice(0, 7);
     list.replaceChildren(...visible.map((item) => createCard(item, query)));
@@ -91,7 +119,20 @@
     heading.textContent = query ? `Resultados para «${query}»` : (activeCategory === "Todo" ? (showEverything ? "Todos los términos" : "Términos esenciales") : activeCategory);
   }
 
-  input.addEventListener("input", () => { showEverything = true; render(); });
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showEverything = true;
+    render();
+  });
+
+  input.addEventListener("input", () => {
+    if (input.value.trim() && activeCategory !== "Todo") {
+      activeCategory = "Todo";
+      categories.querySelectorAll("button").forEach((button, index) => button.setAttribute("aria-pressed", index === 0 ? "true" : "false"));
+    }
+    showEverything = true;
+    render();
+  });
   clearButton.addEventListener("click", () => { input.value = ""; showEverything = false; render(); input.focus(); });
   showAll.addEventListener("click", () => { input.value = ""; activeCategory = "Todo"; showEverything = true; categories.querySelectorAll("button").forEach((button, index) => button.setAttribute("aria-pressed", index === 0 ? "true" : "false")); render(); document.querySelector(".results").scrollIntoView({ behavior: "smooth" }); });
   surprise.addEventListener("click", () => { const item = terms[Math.floor(Math.random() * terms.length)]; input.value = item.term; showEverything = true; render(); document.querySelector(".results").scrollIntoView({ behavior: "smooth" }); });
