@@ -166,12 +166,12 @@
       .sort((a, b) => b.score - a.score || a.item.term.localeCompare(b.item.term, "es"))
       .map(({ item }) => item);
 
-    const visible = filtered.slice(0, 12);
+    const visible = filtered.slice(0, 1);
     list.replaceChildren(...visible.map((item) => createCard(item, query)));
     empty.hidden = filtered.length !== 0;
     list.hidden = filtered.length === 0;
-    count.textContent = `${filtered.length} ${filtered.length === 1 ? "término" : "términos"}`;
-    heading.textContent = `Resultados para «${query}»`;
+    count.textContent = filtered.length ? "1 término" : "0 términos";
+    heading.textContent = `Resultado para «${query}»`;
     renderRelated(filtered[0], visible);
   }
 
