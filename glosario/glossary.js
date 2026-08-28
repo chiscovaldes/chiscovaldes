@@ -660,5 +660,114 @@ window.POST_GLOSSARY = [
     ],
     "definition": "Conservar de forma organizada y verificable masters, proyectos, assets y documentación para su uso futuro.",
     "note": "Es conservar de forma organizada, documentada y verificable los materiales necesarios para poder recuperar y reutilizar el proyecto en el futuro."
+  },
+  {
+    "term": "Nits",
+    "category": "Imagen y color",
+    "aliases": [
+      "nit",
+      "cd/m2",
+      "candelas por metro cuadrado",
+      "luminancia"
+    ],
+    "definition": "Unidad utilizada para expresar luminancia. Un nit equivale a una candela por metro cuadrado (cd/m²) y permite indicar cuánta luz emite una pantalla o un punto de la imagen.",
+    "note": "Es la medida que indica cuánto puede brillar una pantalla. Cuantos más nits, más luminancia puede reproducir; eso no significa que toda la imagen deba verse más brillante."
+  },
+  {
+    "term": "HDR",
+    "category": "Imagen y color",
+    "aliases": [
+      "high dynamic range",
+      "alto rango dinámico",
+      "pq",
+      "hlg",
+      "bt.2100"
+    ],
+    "definition": "Sistema de imagen de alto rango dinámico que permite representar una diferencia de luminancia mayor entre las zonas oscuras y luminosas que un sistema SDR. En televisión se articula habitualmente mediante las curvas PQ o HLG definidas en ITU-R BT.2100.",
+    "note": "Permite conservar más detalle y matices entre las sombras profundas y las luces intensas. No es simplemente subir el brillo: requiere preparar, controlar y mostrar la imagen dentro de un flujo compatible."
+  },
+  {
+    "term": "SDR",
+    "category": "Imagen y color",
+    "aliases": [
+      "standard dynamic range",
+      "rango dinámico estándar",
+      "rec.709",
+      "bt.709"
+    ],
+    "definition": "Sistema de imagen de rango dinámico estándar utilizado en los flujos tradicionales de televisión y vídeo. Habitualmente se asocia a Rec.709 y, en monitorización de referencia, a un blanco de 100 cd/m².",
+    "note": "Es el rango de imagen convencional con el que se han terminado y mostrado durante años la mayoría de contenidos para televisión y web. Tiene menos margen entre negros y luces intensas que HDR."
+  },
+  {
+    "term": "Dolby Atmos",
+    "category": "Entrega",
+    "aliases": [
+      "atmos",
+      "audio inmersivo",
+      "sonido inmersivo",
+      "audio basado en objetos"
+    ],
+    "definition": "Sistema de audio inmersivo basado en canales y objetos sonoros acompañados de metadatos. Durante la reproducción, un renderer adapta su posición y movimiento a la configuración de altavoces o al dispositivo disponible.",
+    "note": "Permite colocar y mover sonidos alrededor del público, también por encima. La mezcla no queda atada únicamente a unos canales fijos: el sistema la adapta al lugar o dispositivo donde se reproduce."
+  },
+  {
+    "term": "Dolby Vision",
+    "category": "Imagen y color",
+    "aliases": [
+      "dv",
+      "dolby vision hdr",
+      "hdr dinámico",
+      "metadata dinámica"
+    ],
+    "definition": "Ecosistema HDR desarrollado por Dolby que utiliza metadatos y procesos de mapeo para adaptar una imagen masterizada a las capacidades de diferentes pantallas y destinos de distribución.",
+    "note": "Es un flujo HDR que conserva las decisiones del máster y añade instrucciones para que cada pantalla compatible adapte la imagen a sus propias capacidades sin hacerlo a ciegas."
+  },
+  {
+    "term": "Artefacto",
+    "category": "Finishing",
+    "aliases": [
+      "artifact",
+      "artefacto digital",
+      "defecto de imagen",
+      "anomalía"
+    ],
+    "definition": "Alteración visible o audible que no pertenece al contenido original y que puede introducirse durante la captura, el procesado, la compresión, el escalado, la transmisión o la reproducción.",
+    "note": "Es un defecto que aparece por cómo se capturó, procesó o comprimió el material: bloques, bandas, bordes extraños, ruido digital o cualquier señal que no debería estar ahí."
+  },
+  {
+    "term": "Blocking",
+    "category": "Finishing",
+    "aliases": [
+      "blockiness",
+      "macroblocking",
+      "bloques de compresión",
+      "artefacto de bloques"
+    ],
+    "definition": "Artefacto de compresión que hace visibles los límites de los bloques utilizados por un codec para representar la imagen. Suele aparecer con bitrates insuficientes, compresión agresiva o sucesivas generaciones de codificación.",
+    "note": "Es cuando la imagen empieza a dividirse en cuadrados visibles, sobre todo en sombras, degradados o escenas con mucho movimiento. Normalmente indica que el archivo está demasiado comprimido o ha sufrido demasiadas recodificaciones."
+  },
+  {
+    "term": "Dead pixel",
+    "category": "Finishing",
+    "aliases": [
+      "píxel muerto",
+      "dead pixels",
+      "pixel muerto",
+      "píxel defectuoso"
+    ],
+    "definition": "Píxel o fotosito defectuoso que no responde correctamente y permanece apagado o fijado en un valor. Puede pertenecer al sensor de cámara o a una pantalla, por lo que conviene comprobar dónde se origina antes de corregirlo.",
+    "note": "Es un punto que no responde como debería. Si aparece en el mismo lugar del archivo, puede venir del sensor; si solo lo ves en una pantalla, el problema puede estar en esa pantalla y no en la imagen."
+  },
+  {
+    "term": "Hot pixel",
+    "category": "Finishing",
+    "aliases": [
+      "píxel caliente",
+      "hot pixels",
+      "pixel caliente",
+      "bright pixel"
+    ],
+    "definition": "Fotosito de un sensor que genera una señal anormalmente alta y aparece como un punto brillante, a menudo de color. Puede hacerse más visible con temperaturas elevadas, exposiciones largas o valores ISO altos.",
+    "note": "Es un punto brillante que aparece siempre en el mismo lugar de la imagen aunque la escena no tenga esa luz. Suele venir del sensor y puede hacerse más evidente cuando la cámara se calienta o se fuerza la exposición."
   }
 ];
