@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Glosario claro, casual y útil de postproducción audiovisual.">
   <title>POST//GLOSARIO</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260827-2">
 </head>
 <body>
   <header class="site-header">
@@ -28,13 +28,13 @@
 
       <div class="quick-actions" aria-label="Acciones rápidas">
         <button class="text-button surprise" type="button">Sorpréndeme</button>
-        <button class="text-button show-all" type="button">Ver todos</button>
+        <button class="text-button suggest-term" type="button">Sugerir un término</button>
       </div>
     </section>
 
-    <nav class="categories" aria-label="Categorías del glosario"></nav>
+    <nav class="categories" aria-label="Categorías del glosario" hidden></nav>
 
-    <section class="results" aria-live="polite" aria-labelledby="results-title">
+    <section class="results" aria-live="polite" aria-labelledby="results-title" hidden>
       <div class="results-header">
         <h2 id="results-title">Términos esenciales</h2>
         <span class="result-count"></span>
@@ -43,16 +43,36 @@
       <div class="empty-state" hidden>
         <strong>No aparece.</strong>
         <p>Puede que sea demasiado específico, esté escrito de otra forma o alguien se lo haya inventado con mucha seguridad.</p>
+        <button class="text-button suggest-term" type="button">Proponer este término</button>
       </div>
+      <aside class="related" aria-labelledby="related-title" hidden>
+        <h2 id="related-title">Términos relacionados</h2>
+        <div class="related-list"></div>
+      </aside>
     </section>
   </main>
 
+  <dialog class="suggestion-dialog" aria-labelledby="suggestion-title">
+    <div class="dialog-header">
+      <div>
+        <p class="eyebrow">POST//GLOSARIO ABIERTO</p>
+        <h2 id="suggestion-title">Sugiere un término</h2>
+      </div>
+      <button class="dialog-close" type="button" aria-label="Cerrar formulario">×</button>
+    </div>
+    <p class="dialog-intro">Las propuestas se revisan antes de publicarse. Si se aprueba, aparecerá con el crédito que indiques.</p>
+    <iframe
+      src="https://docs.google.com/forms/d/e/1FAIpQLSf7DnYLjj2s6Fc0TAvajTQEom1KuX1eToWAiZp_UZTS1P2BDw/viewform?embedded=true"
+      title="Formulario para sugerir un término"
+      loading="lazy">Cargando…</iframe>
+  </dialog>
+
   <footer>
     <p>Si una palabra cambia el alcance, el calendario o la entrega, no es jerga: es una pregunta pendiente.</p>
-    <span>POST//GLOSARIO · v1.2.1</span>
+    <span>POST//GLOSARIO · v1.3.1</span>
   </footer>
 
   <script src="glossary.js?v=20260810-3"></script>
-  <script src="app.js?v=20260811-1"></script>
+  <script src="app.js?v=20260827-2"></script>
 </body>
 </html>
