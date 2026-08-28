@@ -7,11 +7,15 @@
   const empty = document.querySelector(".empty-state");
   const count = document.querySelector(".result-count");
   const heading = document.querySelector("#results-title");
+  const results = document.querySelector(".results");
   const categories = document.querySelector(".categories");
   const surprise = document.querySelector(".surprise");
-  const showAll = document.querySelector(".show-all");
+  const related = document.querySelector(".related");
+  const relatedList = document.querySelector(".related-list");
+  const suggestionDialog = document.querySelector(".suggestion-dialog");
+  const suggestionButtons = document.querySelectorAll(".suggest-term");
+  const dialogClose = document.querySelector(".dialog-close");
   let activeCategory = "Todo";
-  let showEverything = false;
 
   const normalize = (value) => value
     .normalize("NFD")
@@ -42,7 +46,6 @@
     button.setAttribute("aria-pressed", category === activeCategory ? "true" : "false");
     button.addEventListener("click", () => {
       activeCategory = category;
-      showEverything = true;
       categories.querySelectorAll("button").forEach((item) => item.setAttribute("aria-pressed", item === button ? "true" : "false"));
       render();
     });
@@ -89,21 +92,73 @@
         <span class="term-category">${escapeHtml(item.category)}</span>
       </div>
       <div>
-        <p class="term-definition">${highlight(item.definition, query)}</p>
-        <p class="term-note"><strong>Para gente normal:</strong> ${highlight(item.note, query)}</p>
+        <p class="term-simple"><strong>Para gente normal</strong>${highlight(item.note, query)}</p>
+        <p class="term-technical"><strong>Definición técnica</strong>${highlight(item.definition, query)}</p>
       </div>`;
     article.querySelector("button").addEventListener("click", () => {
       input.value = item.term;
-      showEverything = true;
       render();
       input.focus();
     });
     return article;
   }
 
+  const stopWords = new Set(["para", "como", "esta", "este", "desde", "entre", "sobre", "cada", "todo", "todos", "todas", "archivo", "imagen", "video", "proyecto", "permite", "puede", "forma"]);
+
+  function relatedTerms(anchor, visibleItems) {
+    if (!anchor) return [];
+    const visibleNames = new Set(visibleItems.map((item) => item.term));
+    const anchorWords = new Set(normalize([anchor.term, ...(anchor.aliases || []), anchor.definition].join(" "))
+      .split(/\s+/)
+      .filter((word) => word.length > 4 && !stopWords.has(word)));
+
+    return terms
+      .filter((item) => item.term !== anchor.term && !visibleNames.has(item.term))
+      .map((item) => {
+        const candidateWords = normalize([item.term, ...(item.aliases || []), item.definition].join(" ")).split(/\s+/);
+        const sharedWords = candidateWords.filter((word) => anchorWords.has(word)).length;
+        return { item, score: (item.category === anchor.category ? 20 : 0) + sharedWords };
+      })
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score || a.item.term.localeCompare(b.item.term, "es"))
+      .slice(0, 6)
+      .map(({ item }) => item);
+  }
+
+  function renderRelated(anchor, visibleItems) {
+    const suggestions = relatedTerms(anchor, visibleItems);
+    relatedList.replaceChildren(...suggestions.map((item) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "related-term";
+      button.innerHTML = `<strong>${escapeHtml(item.term)}</strong><span>${escapeHtml(item.category)}</span>`;
+      button.addEventListener("click", () => {
+        input.value = item.term;
+        activeCategory = "Todo";
+        render();
+        results.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      return button;
+    }));
+    related.hidden = suggestions.length === 0;
+  }
+
   function render() {
     const query = input.value.trim();
     clearButton.hidden = !query;
+    const hasQuery = Boolean(query);
+    document.body.classList.toggle("has-results", hasQuery);
+    results.hidden = !hasQuery;
+    categories.hidden = !hasQuery;
+
+    if (!hasQuery) {
+      list.replaceChildren();
+      relatedList.replaceChildren();
+      related.hidden = true;
+      empty.hidden = true;
+      return;
+    }
+
     const filtered = terms
       .filter((item) => activeCategory === "Todo" || item.category === activeCategory)
       .map((item) => ({ item, score: relevance(item, query) }))
@@ -111,17 +166,17 @@
       .sort((a, b) => b.score - a.score || a.item.term.localeCompare(b.item.term, "es"))
       .map(({ item }) => item);
 
-    const visible = query || showEverything || activeCategory !== "Todo" ? filtered : filtered.slice(0, 7);
+    const visible = filtered.slice(0, 12);
     list.replaceChildren(...visible.map((item) => createCard(item, query)));
     empty.hidden = filtered.length !== 0;
     list.hidden = filtered.length === 0;
     count.textContent = `${filtered.length} ${filtered.length === 1 ? "término" : "términos"}`;
-    heading.textContent = query ? `Resultados para «${query}»` : (activeCategory === "Todo" ? (showEverything ? "Todos los términos" : "Términos esenciales") : activeCategory);
+    heading.textContent = `Resultados para «${query}»`;
+    renderRelated(filtered[0], visible);
   }
 
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    showEverything = true;
     render();
   });
 
@@ -130,16 +185,20 @@
       activeCategory = "Todo";
       categories.querySelectorAll("button").forEach((button, index) => button.setAttribute("aria-pressed", index === 0 ? "true" : "false"));
     }
-    showEverything = true;
     render();
   });
-  clearButton.addEventListener("click", () => { input.value = ""; showEverything = false; render(); input.focus(); });
-  showAll.addEventListener("click", () => { input.value = ""; activeCategory = "Todo"; showEverything = true; categories.querySelectorAll("button").forEach((button, index) => button.setAttribute("aria-pressed", index === 0 ? "true" : "false")); render(); document.querySelector(".results").scrollIntoView({ behavior: "smooth" }); });
-  surprise.addEventListener("click", () => { const item = terms[Math.floor(Math.random() * terms.length)]; input.value = item.term; showEverything = true; render(); document.querySelector(".results").scrollIntoView({ behavior: "smooth" }); });
+  clearButton.addEventListener("click", () => { input.value = ""; activeCategory = "Todo"; render(); input.focus(); });
+  surprise.addEventListener("click", () => { const item = terms[Math.floor(Math.random() * terms.length)]; input.value = item.term; render(); results.scrollIntoView({ behavior: "smooth" }); });
+
+  suggestionButtons.forEach((button) => button.addEventListener("click", () => suggestionDialog.showModal()));
+  dialogClose.addEventListener("click", () => suggestionDialog.close());
+  suggestionDialog.addEventListener("click", (event) => {
+    if (event.target === suggestionDialog) suggestionDialog.close();
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "/" && document.activeElement !== input) { event.preventDefault(); input.focus(); }
-    if (event.key === "Escape") { input.value = ""; showEverything = false; render(); input.blur(); }
+    if (event.key === "Escape" && !suggestionDialog.open) { input.value = ""; render(); input.blur(); }
   });
 
   render();
