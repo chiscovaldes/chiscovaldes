@@ -44,6 +44,7 @@
       all: "Todo",
       plain: "Para gente normal",
       technical: "Definición técnica",
+      visual: "EN MOVIMIENTO",
       resultFor: "Resultado para",
       oneTerm: "1 término",
       noTerms: "0 términos",
@@ -83,6 +84,7 @@
       all: "All",
       plain: "In plain English",
       technical: "Technical definition",
+      visual: "IN MOTION",
       resultFor: "Result for",
       oneTerm: "1 term",
       noTerms: "0 terms",
@@ -127,7 +129,7 @@
   document.querySelector(".suggestion-dialog iframe").setAttribute("title", ui.dialogFrame);
   document.querySelector(".suggestion-dialog iframe").textContent = ui.loading;
   document.querySelector("footer p").textContent = ui.footer;
-  document.querySelector("footer span").textContent = `${ui.title} · v1.6.0`;
+  document.querySelector("footer span").textContent = `${ui.title} · v1.7.0`;
 
   document.querySelectorAll("[data-language]").forEach((button) => {
     const target = button.dataset.language;
@@ -233,9 +235,93 @@
     return 0;
   }
 
+  const visualDescriptions = {
+    es: {
+      Proxy: "El archivo original genera una copia más ligera para trabajar.",
+      Checksum: "Dos huellas digitales coinciden y confirman una copia íntegra.",
+      LUT: "Una tabla transforma los valores de entrada en una nueva apariencia.",
+      "Frame rate": "Una secuencia de imágenes produce movimiento a 24 fotogramas por segundo.",
+      Blocking: "La compresión insuficiente rompe la imagen en bloques visibles.",
+      HDR: "El rango entre sombras y altas luces se amplía.",
+      DCP: "Imagen, sonido y subtítulos se reúnen en un paquete de cine digital.",
+      Conform: "El montaje de proxies se reconecta con los archivos originales."
+    },
+    en: {
+      Proxy: "The camera original creates a lighter working copy.",
+      Checksum: "Two digital fingerprints match and confirm an intact copy.",
+      LUT: "A table maps input values to a new appearance.",
+      "Frame rate": "A sequence of images creates motion at 24 frames per second.",
+      Blocking: "Insufficient compression data breaks the image into visible blocks.",
+      HDR: "The range between shadows and highlights expands.",
+      DCP: "Picture, sound and subtitles come together in a digital-cinema package.",
+      Conform: "The proxy edit reconnects to the camera originals."
+    }
+  };
+
+  const visualTemplates = {
+    Proxy: () => `
+      <div class="visual-proxy-flow">
+        <span class="visual-file visual-file-original">ORIGINAL</span>
+        <span class="visual-process-arrow">→</span>
+        <span class="visual-file visual-file-proxy">PROXY</span>
+      </div>`,
+    Checksum: () => `
+      <div class="visual-checksum-flow">
+        <span class="visual-hash">A9F2</span>
+        <span class="visual-check">✓</span>
+        <span class="visual-hash">A9F2</span>
+      </div>`,
+    LUT: () => `
+      <div class="visual-lut-flow">
+        <span class="visual-lut-frame visual-lut-log">LOG</span>
+        <span class="visual-lut-cube">33³</span>
+        <span class="visual-lut-frame visual-lut-look">LOOK</span>
+      </div>`,
+    "Frame rate": () => `
+      <div class="visual-framerate-flow">
+        <div class="visual-filmstrip"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span></div>
+        <strong>24 FPS</strong>
+      </div>`,
+    Blocking: () => `
+      <div class="visual-blocking-flow">
+        <div class="visual-block-grid">${"<span></span>".repeat(24)}</div>
+      </div>`,
+    HDR: () => `
+      <div class="visual-hdr-flow">
+        <div class="visual-range visual-range-sdr"><span>SDR</span></div>
+        <div class="visual-range visual-range-hdr"><span>HDR</span></div>
+      </div>`,
+    DCP: () => `
+      <div class="visual-dcp-flow">
+        <div class="visual-dcp-parts"><span>IMAGE</span><span>AUDIO</span><span>SUBS</span></div>
+        <span class="visual-process-arrow">→</span>
+        <div class="visual-dcp-box">DCP</div>
+      </div>`,
+    Conform: () => `
+      <div class="visual-conform-flow">
+        <div class="visual-timeline visual-timeline-proxy"><span></span><span></span><span></span><span></span></div>
+        <span class="visual-process-arrow">↓</span>
+        <div class="visual-timeline visual-timeline-original"><span></span><span></span><span></span><span></span></div>
+      </div>`
+  };
+
+  function createVisual(item) {
+    const sourceTerm = item.sourceTerm || item.term;
+    const template = visualTemplates[sourceTerm];
+    const description = visualDescriptions[language][sourceTerm];
+    if (!template || !description) return "";
+    const className = normalize(sourceTerm).replace(/[^a-z0-9]+/g, "-");
+    return `
+      <div class="term-visual term-visual-${className}" role="img" aria-label="${escapeHtml(description)}">
+        <span class="term-visual-label">${ui.visual}</span>
+        <div class="term-visual-stage" aria-hidden="true">${template()}</div>
+      </div>`;
+  }
+
   function createCard(item, query) {
     const article = document.createElement("article");
     article.className = "term-card";
+    const visual = createVisual(item);
     article.innerHTML = `
       <div>
         <h3 class="term-heading"><button type="button" aria-label="${escapeHtml(ui.searchLabel)}: ${escapeHtml(item.term)}">${highlight(item.term, query)}</button></h3>
@@ -243,6 +329,7 @@
       </div>
       <div>
         <p class="term-simple"><strong>${ui.plain}</strong>${highlight(item.note, query)}</p>
+        ${visual}
         <p class="term-technical"><strong>${ui.technical}</strong>${highlight(item.definition, query)}</p>
       </div>`;
     article.querySelector("button").addEventListener("click", () => {
