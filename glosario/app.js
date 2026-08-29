@@ -101,7 +101,8 @@
   document.querySelector(".brand").textContent = ui.brand;
   document.querySelector(".tool-number").textContent = ui.tool;
   document.querySelector(".hero .eyebrow").textContent = ui.eyebrow;
-  document.querySelector("#page-title").innerHTML = ui.heading;
+  document.querySelector(".glossary-home").innerHTML = ui.heading;
+  document.querySelector(".glossary-home").href = language === "en" ? "?lang=en" : "./";
   document.querySelector(".intro").textContent = ui.intro;
   document.querySelector('label[for="search"]').textContent = ui.searchLabel;
   document.querySelector("#search").placeholder = ui.placeholder;
