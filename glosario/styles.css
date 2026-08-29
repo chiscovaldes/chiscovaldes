@@ -313,51 +313,176 @@ mark {
 .empty-state strong { font-size: 40px; }
 .empty-state p { max-width: 580px; font-size: 18px; line-height: 1.45; }
 
-.related {
-  padding: 52px 0 12px;
+.concept-map {
+  padding: 58px 0 12px;
 }
 
-.related h2 {
-  margin: 0 0 18px;
-  font-size: 13px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  text-transform: uppercase;
+.concept-map-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
 }
 
-.related-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+.concept-kicker {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font: 10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: .08em;
 }
 
-.related-term {
-  min-height: 92px;
-  padding: 18px;
+.concept-map h2 {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: -.045em;
+}
+
+.concept-trail {
+  min-height: 33px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 0 0 12px;
+  scrollbar-width: thin;
+}
+
+.concept-trail-node {
+  flex: none;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.concept-trail-node:not(:last-child)::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 7px;
+  color: var(--line);
+}
+
+.concept-trail-node[aria-current="true"] {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.concept-stage {
+  min-height: 310px;
+  padding: 35px 24px 30px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  border: 1px solid var(--ink);
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-  transition: background 130ms ease, color 130ms ease;
-}
-
-.related-term:hover,
-.related-term:focus-visible {
+  align-items: center;
+  overflow: hidden;
   background: var(--ink);
   color: var(--paper);
 }
 
-.related-term strong { font-size: 18px; }
-.related-term span {
-  color: var(--muted);
-  font: 10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+.concept-node {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--paper);
+  text-align: left;
+}
+
+.concept-node strong {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.concept-node span {
+  color: #aaa;
+  font: 9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.2;
   text-transform: uppercase;
 }
-.related-term:hover span,
-.related-term:focus-visible span { color: inherit; }
+
+.concept-root {
+  width: min(100%, 300px);
+  min-height: 86px;
+  padding: 18px 20px;
+  border-color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
+  opacity: 1;
+}
+
+.concept-root strong { font-size: 23px; }
+.concept-root span { color: var(--muted); }
+
+.concept-trunk {
+  width: 1px;
+  height: 35px;
+  flex: none;
+  background: #777;
+}
+
+.concept-branches {
+  width: 100%;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.concept-branches::before {
+  content: "";
+  height: 1px;
+  position: absolute;
+  top: 0;
+  left: calc(100% / 12);
+  right: calc(100% / 12);
+  background: #777;
+}
+
+.concept-branch {
+  min-width: 0;
+  position: relative;
+  padding-top: 24px;
+}
+
+.concept-branch::before {
+  content: "";
+  width: 1px;
+  height: 24px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  background: #777;
+}
+
+.concept-child {
+  width: 100%;
+  min-height: 91px;
+  padding: 13px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.concept-child:hover,
+.concept-child:focus-visible {
+  transform: translateY(-4px);
+  background: var(--paper);
+  color: var(--ink);
+  outline: 0;
+}
+
+.concept-child:hover span,
+.concept-child:focus-visible span { color: var(--muted); }
+
+.concept-hint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font: 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
 
 .suggestion-dialog {
   width: min(760px, calc(100% - 28px));
@@ -456,7 +581,11 @@ footer span {
   .search-form { height: 58px; }
   .term-card { grid-template-columns: 1fr; gap: 17px; }
   .term-category { margin-top: 8px; }
-  .related-list { grid-template-columns: 1fr 1fr; }
+  .concept-map-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .concept-stage { padding-inline: 13px; }
+  .concept-branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .concept-branches::before { left: 25%; right: 25%; }
+  .concept-child { min-height: 82px; }
   .suggestion-dialog { box-shadow: 6px 6px 0 var(--ink); }
   .dialog-header, .dialog-intro { padding-inline: 19px; }
   footer { align-items: flex-start; flex-direction: column; }
@@ -465,7 +594,7 @@ footer span {
 @media print {
   @page { size: A4 portrait; margin: 14mm; }
   body { background: #fff; }
-  .site-header, .search-form, .quick-actions, .categories, .related, .suggestion-dialog, footer { display: none; }
+  .site-header, .search-form, .quick-actions, .categories, .concept-map, .suggestion-dialog, footer { display: none; }
   main { width: 100%; }
   .hero { padding: 0 0 12mm; text-align: left; }
   .hero .eyebrow { margin-bottom: 8mm; }

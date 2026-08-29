@@ -28,7 +28,12 @@
       missingTitle: "No aparece.",
       missingBody: "Puede que sea demasiado específico, esté escrito de otra forma o alguien se lo haya inventado con mucha seguridad.",
       propose: "Proponer este término",
-      related: "Términos relacionados",
+      conceptKicker: "CONEXIONES",
+      conceptTitle: "Mapa de conceptos",
+      conceptTrail: "Ruta de conceptos",
+      conceptHint: "Abre una rama para seguir explorando.",
+      conceptReset: "Volver al origen",
+      conceptExplore: "Explorar",
       open: "POST//GLOSARIO ABIERTO",
       dialogTitle: "Sugiere un término",
       dialogClose: "Cerrar formulario",
@@ -62,7 +67,12 @@
       missingTitle: "Nothing yet.",
       missingBody: "It may be very specific, spelled differently, or somebody may have invented it with impressive confidence.",
       propose: "Suggest this term",
-      related: "Related terms",
+      conceptKicker: "CONNECTIONS",
+      conceptTitle: "Concept map",
+      conceptTrail: "Concept trail",
+      conceptHint: "Open a branch to keep exploring.",
+      conceptReset: "Back to root",
+      conceptExplore: "Explore",
       open: "OPEN POST//GLOSSARY",
       dialogTitle: "Suggest a term",
       dialogClose: "Close form",
@@ -104,7 +114,11 @@
   document.querySelector("#results-title").textContent = ui.essentials;
   document.querySelector(".empty-state strong").textContent = ui.missingTitle;
   document.querySelector(".empty-state p").textContent = ui.missingBody;
-  document.querySelector("#related-title").textContent = ui.related;
+  document.querySelector(".concept-kicker").textContent = ui.conceptKicker;
+  document.querySelector("#concept-map-title").textContent = ui.conceptTitle;
+  document.querySelector(".concept-trail").setAttribute("aria-label", ui.conceptTrail);
+  document.querySelector(".concept-hint").textContent = ui.conceptHint;
+  document.querySelector(".concept-reset").textContent = ui.conceptReset;
   document.querySelector(".dialog-header .eyebrow").textContent = ui.open;
   document.querySelector("#suggestion-title").textContent = ui.dialogTitle;
   document.querySelector(".dialog-close").setAttribute("aria-label", ui.dialogClose);
@@ -112,7 +126,7 @@
   document.querySelector(".suggestion-dialog iframe").setAttribute("title", ui.dialogFrame);
   document.querySelector(".suggestion-dialog iframe").textContent = ui.loading;
   document.querySelector("footer p").textContent = ui.footer;
-  document.querySelector("footer span").textContent = `${ui.title} · v1.5.0`;
+  document.querySelector("footer span").textContent = `${ui.title} · v1.6.0`;
 
   document.querySelectorAll("[data-language]").forEach((button) => {
     const target = button.dataset.language;
@@ -139,12 +153,16 @@
   const results = document.querySelector(".results");
   const categories = document.querySelector(".categories");
   const surprise = document.querySelector(".surprise");
-  const related = document.querySelector(".related");
-  const relatedList = document.querySelector(".related-list");
+  const conceptMap = document.querySelector(".concept-map");
+  const conceptTrail = document.querySelector(".concept-trail");
+  const conceptStage = document.querySelector(".concept-stage");
+  const conceptReset = document.querySelector(".concept-reset");
   const suggestionDialog = document.querySelector(".suggestion-dialog");
   const suggestionButtons = document.querySelectorAll(".suggest-term");
   const dialogClose = document.querySelector(".dialog-close");
   let activeCategory = ui.all;
+  let conceptPath = [];
+  let preserveConceptPath = false;
 
   const normalize = (value) => String(value || "")
     .normalize("NFD")
@@ -228,6 +246,7 @@
       </div>`;
     article.querySelector("button").addEventListener("click", () => {
       input.value = item.term;
+      conceptPath = [];
       render();
       input.focus();
     });
@@ -258,22 +277,110 @@
       .map(({ item }) => item);
   }
 
-  function renderRelated(anchor, visibleItems) {
-    const suggestions = relatedTerms(anchor, visibleItems);
-    relatedList.replaceChildren(...suggestions.map((item) => {
+  const canonicalName = (item) => item ? (item.sourceTerm || item.term) : "";
+
+  function termFromCanonical(name) {
+    return terms.find((item) => canonicalName(item) === name);
+  }
+
+  function conceptTerms(anchor) {
+    if (!anchor) return [];
+    const relations = window.POST_CONCEPT_RELATIONS || {};
+    const curated = (relations[canonicalName(anchor)] || [])
+      .map(termFromCanonical)
+      .filter(Boolean);
+    const fallback = relatedTerms(anchor, [anchor]);
+    const unique = new Map();
+    [...curated, ...fallback].forEach((item) => {
+      if (canonicalName(item) !== canonicalName(anchor)) unique.set(canonicalName(item), item);
+    });
+    return [...unique.values()].slice(0, 6);
+  }
+
+  function setActiveCategoryToAll() {
+    activeCategory = ui.all;
+    categories.querySelectorAll("button").forEach((button, index) => {
+      button.setAttribute("aria-pressed", index === 0 ? "true" : "false");
+    });
+  }
+
+  function openConcept(item, path) {
+    conceptPath = path;
+    preserveConceptPath = true;
+    input.value = item.term;
+    setActiveCategoryToAll();
+    render();
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function createConceptButton(item, className) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.setAttribute("aria-label", `${ui.conceptExplore}: ${item.term}`);
+    button.innerHTML = `<strong>${escapeHtml(item.term)}</strong><span>${escapeHtml(item.category)}</span>`;
+    return button;
+  }
+
+  function renderConceptMap(anchor) {
+    if (!anchor) {
+      conceptTrail.replaceChildren();
+      conceptStage.replaceChildren();
+      conceptMap.hidden = true;
+      return;
+    }
+
+    const current = canonicalName(anchor);
+    if (!preserveConceptPath || conceptPath.length === 0 || conceptPath.at(-1) !== current) {
+      conceptPath = [current];
+    }
+    preserveConceptPath = false;
+
+    const suggestions = conceptTerms(anchor);
+    const trailButtons = conceptPath.map((name, index) => {
+      const item = termFromCanonical(name);
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "related-term";
-      button.innerHTML = `<strong>${escapeHtml(item.term)}</strong><span>${escapeHtml(item.category)}</span>`;
+      button.className = "concept-trail-node";
+      button.textContent = item ? item.term : name;
+      button.setAttribute("aria-current", index === conceptPath.length - 1 ? "true" : "false");
       button.addEventListener("click", () => {
-        input.value = item.term;
-        activeCategory = ui.all;
-        render();
-        results.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (item) openConcept(item, conceptPath.slice(0, index + 1));
       });
       return button;
-    }));
-    related.hidden = suggestions.length === 0;
+    });
+    conceptTrail.replaceChildren(...trailButtons);
+
+    const root = createConceptButton(anchor, "concept-node concept-root");
+    root.disabled = true;
+    const trunk = document.createElement("div");
+    trunk.className = "concept-trunk";
+    trunk.setAttribute("aria-hidden", "true");
+    const branches = document.createElement("div");
+    branches.className = "concept-branches";
+    branches.setAttribute("role", "list");
+
+    suggestions.forEach((item, index) => {
+      const branch = document.createElement("div");
+      branch.className = "concept-branch";
+      branch.setAttribute("role", "listitem");
+      branch.style.setProperty("--branch-index", index);
+      const button = createConceptButton(item, "concept-node concept-child");
+      button.addEventListener("click", () => {
+        const name = canonicalName(item);
+        const existing = conceptPath.indexOf(name);
+        const nextPath = existing >= 0
+          ? conceptPath.slice(0, existing + 1)
+          : [...conceptPath, name];
+        openConcept(item, nextPath);
+      });
+      branch.appendChild(button);
+      branches.appendChild(branch);
+    });
+
+    conceptStage.replaceChildren(root, trunk, branches);
+    conceptReset.hidden = conceptPath.length < 2;
+    conceptMap.hidden = suggestions.length === 0;
   }
 
   function updateUrl(query) {
@@ -295,8 +402,8 @@
 
     if (!hasQuery) {
       list.replaceChildren();
-      relatedList.replaceChildren();
-      related.hidden = true;
+      conceptPath = [];
+      renderConceptMap(null);
       return;
     }
 
@@ -313,7 +420,7 @@
     list.hidden = filtered.length === 0;
     count.textContent = filtered.length ? ui.oneTerm : ui.noTerms;
     heading.textContent = `${ui.resultFor} “${query}”`;
-    renderRelated(filtered[0], visible);
+    renderConceptMap(filtered[0]);
   }
 
   searchForm.addEventListener("submit", (event) => {
@@ -334,6 +441,7 @@
   clearButton.addEventListener("click", () => {
     input.value = "";
     activeCategory = ui.all;
+    conceptPath = [];
     render();
     input.focus();
   });
@@ -341,6 +449,7 @@
   surprise.addEventListener("click", () => {
     const item = terms[Math.floor(Math.random() * terms.length)];
     input.value = item.term;
+    conceptPath = [];
     render();
     results.scrollIntoView({ behavior: "smooth" });
   });
@@ -351,6 +460,11 @@
   dialogClose.addEventListener("click", () => suggestionDialog.close());
   suggestionDialog.addEventListener("click", (event) => {
     if (event.target === suggestionDialog) suggestionDialog.close();
+  });
+
+  conceptReset.addEventListener("click", () => {
+    const item = termFromCanonical(conceptPath[0]);
+    if (item) openConcept(item, [conceptPath[0]]);
   });
 
   document.addEventListener("keydown", (event) => {

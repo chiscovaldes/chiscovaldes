@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Glosario claro, casual y útil de postproducción audiovisual.">
   <title>POST//GLOSARIO</title>
-  <link rel="stylesheet" href="styles.css?v=20260827-2">
+  <link rel="stylesheet" href="styles.css?v=20260829-1">
 </head>
 <body>
   <header class="site-header">
@@ -51,9 +51,17 @@
         <p>Puede que sea demasiado específico, esté escrito de otra forma o alguien se lo haya inventado con mucha seguridad.</p>
         <button class="text-button suggest-term" type="button">Proponer este término</button>
       </div>
-      <aside class="related" aria-labelledby="related-title" hidden>
-        <h2 id="related-title">Términos relacionados</h2>
-        <div class="related-list"></div>
+      <aside class="concept-map" aria-labelledby="concept-map-title" hidden>
+        <div class="concept-map-header">
+          <div>
+            <p class="concept-kicker">CONEXIONES</p>
+            <h2 id="concept-map-title">Mapa de conceptos</h2>
+          </div>
+          <button class="concept-reset text-button" type="button">Volver al origen</button>
+        </div>
+        <div class="concept-trail" aria-label="Ruta de conceptos"></div>
+        <div class="concept-stage" aria-live="polite"></div>
+        <p class="concept-hint">Abre una rama para seguir explorando.</p>
       </aside>
     </section>
   </main>
@@ -75,11 +83,12 @@
 
   <footer>
     <p>Si una palabra cambia el alcance, el calendario o la entrega, no es jerga: es una pregunta pendiente.</p>
-    <span>POST//GLOSARIO · v1.5.0</span>
+    <span>POST//GLOSARIO · v1.6.0</span>
   </footer>
 
   <script src="glossary.js?v=20260828-1"></script>
   <script src="glossary-en.js?v=20260828-2"></script>
-  <script src="app.js?v=20260828-2"></script>
+  <script src="concepts.js?v=20260829-1"></script>
+  <script src="app.js?v=20260829-1"></script>
 </body>
 </html>
